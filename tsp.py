@@ -108,15 +108,32 @@ class TSP:
         
         self.crossover = crossover_func_wrapper
 
-    def set_mutation(self, mutation_func, k=None):
+    def set_mutation(self, mutation_func, p, k=None):
         kwargs2 = {}
         if k: kwargs2['k'] = k
 
         @functools.wraps(mutation_func)
         def mutation_func_wrapper(child, *args, **kwargs):
-            mutation_func(child, *args, **kwargs, **kwargs2)
+            if random.random() < p:
+                mutation_func(child, *args, **kwargs, **kwargs2)
         
         self.mutation = mutation_func_wrapper
+
+    def set_mutations(self, mutation_funcs, ps, ks=None):
+        if ks is None: ks = [None for _ in range(len(mutation_funcs))]
+        if len(mutation_funcs) != len(ps) != len(ks): raise Exception('Lengths must be equal.')
+        kwargs2s = []
+        for k in ks:
+            kwargs2 = {}
+            if k: kwargs2['k'] = k
+            kwargs2s.append(kwargs2)
+
+        def mutations_func_wrapper(child, *args, **kwargs):
+            for mutation_func, p, kwargs2 in zip(mutation_funcs, ps, kwargs2s):
+                if random.random() < p:
+                    mutation_func(child, *args, **kwargs, **kwargs2)
+
+        self.mutation = mutations_func_wrapper
 
     def set_survivor_selection(self, survivor_selection_index_func, k=None, tournament_size=None):
         kwargs2 = {}
@@ -130,13 +147,12 @@ class TSP:
         self.survivor_selection_index = survivor_selection_index_func_wrapper
 
     ### Execution ###
-    def evolve(self, k, p):
+    def evolve(self, k):
         for _ in range(k):
             for _ in range(self.parent_pair_size):                      # Repeat
                 parentA, parentB = self.parent_selection(2)             # Select Pair of Parents
                 for child in self.crossover(parentA, parentB):          # Crossover Parents
-                    if random.random() < p:
-                        self.mutation(child)                            # Mutate Child
+                    self.mutation(child)                                # Mutate Child
                     self.population.append(child)                       # Add to Population
                     self.fitnesses.append(self.evaluate_fitness(child)) # Evaluate Fitness
             # Select Survivors

@@ -82,7 +82,7 @@ def _stochastic_universal_sampling_index(fitness, k):
     if len(indices) < k:
         for i in sorted(indices, reverse=True):
             fitness.pop(i)
-        indices += _stochastic_universal_sampling_index(fitness, k - len(indices))
+        indices.update(_stochastic_universal_sampling_index(fitness, k - len(indices)))
 
     return indices
 
