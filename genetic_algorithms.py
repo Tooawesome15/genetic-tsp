@@ -38,7 +38,7 @@ def stochastic_universal_sampling(population, fitness, k):
 #     interval = fitness_sum / k
 #     pointer = interval * random.random()
 
-#     indices = set([])
+#     indices = set()
 #     fitness_accumulate = fitness[0]
 #     index = 0
 #     for _ in range(k):
@@ -68,7 +68,7 @@ def _stochastic_universal_sampling_index(fitness, k):
     interval = fitness_sum / k
     pointer = interval * random.random()
 
-    indices = set([])
+    indices = set()
     fitness_accumulate = fitness[0]
     index = 0
     for _ in range(k):
@@ -109,11 +109,12 @@ def partially_matched_crossover(parentA, parentB, k):
     parent_length = len(parentA)
     points = random.sample(range(1, parent_length - 1), k)
     points.sort()
-    points = points + [parent_length]
+    #points = points + [parent_length]
+    points.append(parent_length)
     childA1, childA2, childB1, childB2 = [], [], [], []
 
     # Create Set for indicies of each segment group
-    segments_indices = (set([]), set([]))
+    segments_indices = (set(), set())
     prev_point = 0
     segments_no = 0
     for point in points:
@@ -168,7 +169,7 @@ def cycle_crossover(parentA, parentB, k):
         index = parentB_dict[value]
         mapAB.append(index)
 
-    grouped = set([])
+    grouped = set()
     groups = []
     
     for i in range(parent_length):
@@ -215,8 +216,8 @@ def order_1_crossover(parentA, parentB, k):
     childA1, childA2, childB1, childB2 = [], [], [], []
 
     # Exclude elements from parents to respective child
-    childA_excluded = (set([]), set([]))
-    childB_excluded = (set([]), set([]))
+    childA_excluded = (set(), set())
+    childB_excluded = (set(), set())
     childA1_excluded, childA2_excluded = childA_excluded
     childB1_excluded, childB2_excluded = childB_excluded
     prev_point = 0
