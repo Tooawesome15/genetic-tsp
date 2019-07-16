@@ -22,8 +22,8 @@ def calc_distance(pointA, pointB):
 
 def calc_route_distance(route):
     total = 0
-    for (pointA, pointB) in pairwise(route):
-        total += calc_distance(pointA, pointB)
+    for pair_points in pairwise(route):
+        total += calc_distance(*pair_points)
     return total
 
 def calc_fitness(distance):
