@@ -31,7 +31,7 @@ def calc_fitness(distance):
 
 POPULATION_SIZE = 100
 PARENTS_SIZE = 50
-N_POINTS = 100
+N_POINTS = 30
 POINTS = [Point.random() for _ in range(N_POINTS)]
 screen = gui.GUI()
 
